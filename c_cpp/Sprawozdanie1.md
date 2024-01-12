@@ -138,3 +138,171 @@ int main(){
     }
 }
 ```
+
+### Tablica pomocnicza do zadań 6 - 11
+| 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|
+| 1 | 2 | 3 | 4 | 5 |
+| 1 | 2 | 3 | 4 | 5 |
+| 1 | 2 | 3 | 4 | 5 |
+| 1 | 2 | 3 | 4 | 5 |
+
+
+## Zadanie 6
+Następny program miał za zadanie zliczyć sumę liczb z tablicy dwuwymiarowej, pod
+warunkiem że liczba jest mniejsza bądź równa 2 lub większa bądź równa 5.
+
+```C++
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int tablica[5][5] = {{ 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }};
+    int i, j;
+    int suma = 0;
+
+    for(i = 0; i < 5; i++)
+    {
+        for(j = 0; j < 5; j++)
+        {
+            if(tablica[i][j] <= 2 || tablica[i][j] >= 5) suma = suma + tablica[i][j];
+        }
+    }
+
+    cout << "Suma liczb tablicy mniejszych badz rownych 2, oraz wiekszych badz rownych 5: " << suma;
+}
+```
+
+## Zadanie 7
+Kolejny program szukał w tablicy dwuwymiarowej najmniejszej liczby.
+
+```C++
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int tablica[5][5] = {{ 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }};
+    int i, j;
+    int najmniejsza = tablica[0][0];
+
+    for(i = 0; i < 5; i++)
+    {
+        for(j = 0; j < 5; j++)
+        {
+            if(tablica[i][j] < najmniejsza) najmniejsza = tablica[i][j];
+        }
+    }
+
+    cout << "Najmniejszy element tablicy wynosi: " << najmniejsza;
+}
+```
+
+## Zadanie 8
+W następnym zadaniu, program miał zliczyć sumę liczb tablicy po ukosie (od lewego
+górnego elementu, do prawego dolnego).
+
+```C++
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int tablica[5][5] = {{ 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }};
+    int i;
+    int suma = 0;
+
+    for(i = 0; i < 5; i++)
+    {
+        suma = suma + tablica[i][i];
+    }
+
+    cout << "Suma liczb po przekatnej wynosi: " << suma;
+}
+```
+
+## Zadanie 9
+W kolejnym zadaniu, program miał zliczyć sumę liczb tablicy po ukosie, jak w
+poprzednim zadaniu, oraz liczb znajdujących się pod tą przekątną.
+
+```C++
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int tablica[5][5] = {{ 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }};
+    int i, j;
+    int suma = 0;
+
+    for(i = 0; i < 5; i++)
+    {
+        for(j = 0; j <= i; j++)
+        {
+            suma = suma + tablica[i][j];
+        }
+    }
+
+    cout << "Suma liczb po przekatnej oraz liczb pod nia wynosi: " << suma;
+}
+```
+
+## Zadanie 10
+Następne zadanie polegało na stworzeniu programu, który korzystając z założeń
+przekątnej w tablicy z poprzednich przykładów, znajdzie największą liczbę
+znajdującą się w tej przekątnej oraz pod nią.
+
+```C++
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int tablica[5][5] = {{ 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }};
+    int i, j;
+    int najwieksza = tablica[0][0];
+
+    for(i = 0; i < 5; i++)
+    {
+        for(j = 0; j <= i; j++)
+        {
+            if(tablica[i][j] > najwieksza) najwieksza = tablica[i][j];
+        }
+    }
+
+    cout << "Najwieksza liczba z przekatnej oraz z liczb pod nia wynosi: " << najwieksza;
+}
+```
+
+## Zadanie 11
+Kolejny program miał za zadanie obliczać sumę liczb z przekątnej oraz znajdujących
+się powyżej przekątnej z poprzednich przykładów.
+
+```C++
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int tablica[5][5] = {{ 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 }};
+    int i, j;
+    int suma = 0;
+
+    for(i = 0; i < 5; i++)
+    {
+        for(j = 0+i; j < 5; j++)
+        {
+            suma = suma + tablica[i][j];
+        }
+    }
+
+    cout << "Suma liczba z przekatnej oraz liczb nad nia wynosi: " << suma;
+}
+```
