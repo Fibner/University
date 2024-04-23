@@ -10,15 +10,6 @@ public:
 	string brand;
 	string model;
 	int power;
-	Motorcycle() {};
-	Motorcycle(string _brand, string _model, int _power) {
-		brand = _brand;
-		model = _model;
-		power = _power;
-	};
-	void static displayMotorcycles() {
-
-	}
 };
 
 class Customer {
@@ -29,7 +20,9 @@ public:
 };
 
 void menu();
+void addCustomer();
 void addMotorcycle();
+void displayCustomers();
 void displayMotorcycles();
 int main() {
 	menu();
@@ -72,8 +65,14 @@ void menu() {
 
 	switch (operation)
 	{
+	case 1:
+		addCustomer();
+		break;
 	case 2:
 		addMotorcycle();
+		break;
+	case 6:
+		displayCustomers();
 		break;
 	case 7:
 		displayMotorcycles();
@@ -82,6 +81,40 @@ void menu() {
 		return menu();
 		break;
 	}
+}
+
+void addCustomer() {
+	Customer tempCustomer;
+	vector<Customer> customers;
+
+	ifstream fileIn;
+	fileIn.open("customers", ios::binary | ios::in);
+	while (fileIn.read((char*)&tempCustomer, sizeof(Customer)))
+	{
+		customers.push_back(tempCustomer);
+	}
+	fileIn.close();
+
+	system("cls");
+	cout << "Podaj imie: ";
+	cin >> tempCustomer.name;
+	cout << "Podaj nazwisko: ";
+	cin >> tempCustomer.surname;
+	cout << "Podaj adres: ";
+	cin >> tempCustomer.addres;
+	customers.push_back(tempCustomer);
+
+	ofstream fileOut;
+	fileOut.open("customers", ios::binary | ios::out);
+	for (int i = 0; i < customers.size(); i++)
+	{
+		fileOut.write((char*)&customers.at(i), sizeof(Customer));
+	}
+	fileOut.close();
+
+	cout << "\nNowy klient zostal dodany do bazy.\n";
+	system("pause");
+	return menu();
 }
 
 void addMotorcycle() {
@@ -95,8 +128,8 @@ void addMotorcycle() {
 	cin >> tempMotorcycle.power;
 
 	vector<Motorcycle> motorcycles;
-	ifstream fileIn;
 
+	ifstream fileIn;
 	fileIn.open("motorcycles", ios::binary | ios::in);
 	Motorcycle tempReadMotorcycle;
 	while (fileIn.read((char*)&tempReadMotorcycle, sizeof(Motorcycle)))
@@ -107,7 +140,7 @@ void addMotorcycle() {
 
 	motorcycles.push_back(tempMotorcycle);
 	ofstream outFile;
-	outFile.open("motorcycles", ios::binary);
+	outFile.open("motorcycles", ios::binary | ios::out);
 	for (int i = 0; i < motorcycles.size(); i++)
 	{
 		outFile.write((char*)&motorcycles.at(i), sizeof(Motorcycle));
@@ -115,6 +148,32 @@ void addMotorcycle() {
 	outFile.close();
 
 	cout << "\nNowy motocykl zostal dodany do bazy.\n";
+	system("pause");
+	return menu();
+};
+
+void displayCustomers() {
+	vector<Customer> customers;
+	ifstream fileIn;
+
+	fileIn.open("customers", ios::binary | ios::in);
+	Customer tempCustomer;
+	while (fileIn.read((char*)&tempCustomer, sizeof(Customer)))
+	{
+		customers.push_back(tempCustomer);
+	}
+	fileIn.close();
+
+	system("cls");
+	for (int i = 0; i < customers.size(); i++)
+	{
+		cout << "Klient " << i + 1 << "\n";
+		cout << "Imie: " << customers.at(i).name << "\n";
+		cout << "Nazwisko: " << customers.at(i).surname << "\n";
+		cout << "Adres: " << customers.at(i).addres << "\n\n";
+	}
+	if (customers.size() == 0) cout << "Brak klientow w bazie.\n\n";
+
 	system("pause");
 	return menu();
 };
@@ -139,7 +198,7 @@ void displayMotorcycles() {
 		cout << "Model: " << motorcycles.at(i).model << "\n";
 		cout << "Moc: " << motorcycles.at(i).power << "\n\n";
 	}
-
+	if (motorcycles.size() == 0) cout << "Brak motocykli w bazie.\n\n";
 	system("pause");
 	return menu();
 };
