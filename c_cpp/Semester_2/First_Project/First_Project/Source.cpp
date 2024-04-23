@@ -22,29 +22,17 @@ public:
 void menu();
 void addCustomer();
 void addMotorcycle();
+void deleteCustomer();
+void deleteMotorcycle();
 void displayCustomers();
 void displayMotorcycles();
+
 int main() {
 	menu();
 	/*Motorcycle motorcycle1("Suzuki", "Katana", 999);
 	Motorcycle motorcycle2("Suzuki", "GSX-8R", 1135);
 	Motorcycle motorcycle3("Harley Davison", "Fatboy", 1868);
-	Motorcycle motorcycles[3];
-	motorcycles[0] = motorcycle1;
-	motorcycles[1] = motorcycle2;
-	motorcycles[2] = motorcycle3;
-
-	ofstream fileOut;
-	ifstream fileIn;
-	fileOut.open("motorcycles", ios::binary);
-	fileOut.write((char *) &motorcycles, sizeof(Motorcycle)*3);
-	fileOut.close();
-
-	Motorcycle readMotorcycles[3];
-	fileIn.open("motorcycles", ios::binary);
-	fileIn.read((char *) &readMotorcycles, sizeof(Motorcycle)*3);
-	fileIn.close();*/
-
+	*/
 	return 0;
 }
 
@@ -70,6 +58,12 @@ void menu() {
 		break;
 	case 2:
 		addMotorcycle();
+		break;
+	case 3:
+		deleteCustomer();
+		break;
+	case 4:
+		deleteMotorcycle();
 		break;
 	case 6:
 		displayCustomers();
@@ -148,6 +142,96 @@ void addMotorcycle() {
 	outFile.close();
 
 	cout << "\nNowy motocykl zostal dodany do bazy.\n";
+	system("pause");
+	return menu();
+};
+
+void deleteCustomer() {
+	vector<Customer> customers;
+	ifstream fileIn;
+
+	fileIn.open("customers", ios::binary | ios::in);
+	Customer tempCustomer;
+	while (fileIn.read((char*)&tempCustomer, sizeof(Customer)))
+	{
+		customers.push_back(tempCustomer);
+	}
+	fileIn.close();
+
+	system("cls");
+	for (int i = 0; i < customers.size(); i++)
+	{
+		cout << "Klient " << i + 1 << "\n";
+		cout << "Imie: " << customers.at(i).name << "\n";
+		cout << "Nazwisko: " << customers.at(i).surname << "\n";
+		cout << "Adres: " << customers.at(i).addres << "\n\n";
+	}
+	if (customers.size() == 0) {
+		cout << "Brak klientow do usuniecia.\n\n";
+		system("pause");
+		return menu();
+	}
+
+	int deleteId = 0;
+	cout << "Podaj numer klienta do usuniecia: ";
+	cin >> deleteId;
+	customers.erase(customers.begin()+deleteId-1);
+
+	ofstream fileOut;
+	fileOut.open("customers", ios::binary | ios::out);
+	for (int i = 0; i < customers.size(); i++)
+	{
+		fileOut.write((char*)&customers.at(i), sizeof(Customer));
+	}
+	fileOut.close();
+
+	system("cls");
+	cout << "Klient zostal usuniety z bazy.\n\n";
+	system("pause");
+	return menu();
+};
+
+void deleteMotorcycle() {
+	vector<Motorcycle> motorcycles;
+	ifstream fileIn;
+
+	fileIn.open("motorcycles", ios::binary | ios::in);
+	Motorcycle tempMotorcycle;
+	while (fileIn.read((char*)&tempMotorcycle, sizeof(Motorcycle)))
+	{
+		motorcycles.push_back(tempMotorcycle);
+	}
+	fileIn.close();
+
+	system("cls");
+	for (int i = 0; i < motorcycles.size(); i++)
+	{
+		cout << "Motocykl " << i + 1 << "\n";
+		cout << "Marka: " << motorcycles.at(i).brand << "\n";
+		cout << "Model: " << motorcycles.at(i).model << "\n";
+		cout << "Moc: " << motorcycles.at(i).power << "\n\n";
+	}
+	if (motorcycles.size() == 0) {
+		cout << "Brak motocykli do usuniecia.\n\n";
+		system("pause");
+		return menu();
+	}
+
+	int deleteId = 0;
+	cout << "Podaj numer motocyklu do usuniecia: ";
+	cin >> deleteId;
+	motorcycles.erase(motorcycles.begin() + deleteId - 1);
+
+	ofstream fileOut;
+	fileOut.open("motorcycles", ios::binary | ios::out);
+	for (int i = 0; i < motorcycles.size(); i++)
+	{
+		fileOut.write((char*)&motorcycles.at(i), sizeof(Motorcycle));
+	}
+	fileOut.close();
+
+	system("cls");
+	cout << "Motocykl zostal usuniety z bazy.\n\n";
 	system("pause");
 	return menu();
 };
