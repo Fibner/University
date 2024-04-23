@@ -7,16 +7,16 @@ using namespace std;
 
 class Motorcycle {
 public:
-	string brand;
-	string model;
+	char brand[50];
+	char model[50];
 	int power;
 };
 
 class Customer {
 public:
-	string name;
-	string surname;
-	string addres;
+	char name[50];
+	char surname[50];
+	char addres[50];
 };
 
 void menu();
@@ -24,15 +24,12 @@ void addCustomer();
 void addMotorcycle();
 void deleteCustomer();
 void deleteMotorcycle();
+void editMotorcycle();
 void displayCustomers();
 void displayMotorcycles();
 
 int main() {
-	menu();
-	/*Motorcycle motorcycle1("Suzuki", "Katana", 999);
-	Motorcycle motorcycle2("Suzuki", "GSX-8R", 1135);
-	Motorcycle motorcycle3("Harley Davison", "Fatboy", 1868);
-	*/
+	while(true) menu();
 	return 0;
 }
 
@@ -65,6 +62,9 @@ void menu() {
 	case 4:
 		deleteMotorcycle();
 		break;
+	case 5:
+		editMotorcycle();
+		break;
 	case 6:
 		displayCustomers();
 		break;
@@ -72,7 +72,6 @@ void menu() {
 		displayMotorcycles();
 		break;
 	default:
-		return menu();
 		break;
 	}
 }
@@ -108,7 +107,6 @@ void addCustomer() {
 
 	cout << "\nNowy klient zostal dodany do bazy.\n";
 	system("pause");
-	return menu();
 }
 
 void addMotorcycle() {
@@ -143,7 +141,6 @@ void addMotorcycle() {
 
 	cout << "\nNowy motocykl zostal dodany do bazy.\n";
 	system("pause");
-	return menu();
 };
 
 void deleteCustomer() {
@@ -175,7 +172,7 @@ void deleteCustomer() {
 	int deleteId = 0;
 	cout << "Podaj numer klienta do usuniecia: ";
 	cin >> deleteId;
-	customers.erase(customers.begin()+deleteId-1);
+	customers.erase(customers.begin() + deleteId - 1);
 
 	ofstream fileOut;
 	fileOut.open("customers", ios::binary | ios::out);
@@ -188,7 +185,6 @@ void deleteCustomer() {
 	system("cls");
 	cout << "Klient zostal usuniety z bazy.\n\n";
 	system("pause");
-	return menu();
 };
 
 void deleteMotorcycle() {
@@ -217,6 +213,7 @@ void deleteMotorcycle() {
 		return menu();
 	}
 
+
 	int deleteId = 0;
 	cout << "Podaj numer motocyklu do usuniecia: ";
 	cin >> deleteId;
@@ -233,7 +230,72 @@ void deleteMotorcycle() {
 	system("cls");
 	cout << "Motocykl zostal usuniety z bazy.\n\n";
 	system("pause");
-	return menu();
+};
+
+void editMotorcycle(){
+	vector<Motorcycle> motorcycles;
+	ifstream fileIn;
+
+	fileIn.open("motorcycles", ios::binary | ios::in);
+	Motorcycle tempMotorcycle;
+	while (fileIn.read((char*)&tempMotorcycle, sizeof(Motorcycle)))
+	{
+		motorcycles.push_back(tempMotorcycle);
+	}
+	fileIn.close();
+
+	system("cls");
+	for (int i = 0; i < motorcycles.size(); i++)
+	{
+		cout << "Motocykl " << i + 1 << "\n";
+		cout << "Marka: " << motorcycles.at(i).brand << "\n";
+		cout << "Model: " << motorcycles.at(i).model << "\n";
+		cout << "Moc: " << motorcycles.at(i).power << "\n\n";
+	}
+	if (motorcycles.size() == 0) {
+		cout << "Brak motocykli do edycji.\n\n";
+		system("pause");
+		return menu();
+	}
+
+	int editId = 0;
+	int editAttribute;
+	cout << "Podaj numer motocyklu do edycji: ";
+	cin >> editId;
+	system("cls");
+	cout << "1. Marka: " << motorcycles.at(editId-1).brand << "\n";
+	cout << "2. Model: " << motorcycles.at(editId - 1).model << "\n";
+	cout << "3. Moc: " << motorcycles.at(editId - 1).power << "\n\n";
+	cout << "Ktory atrybut chcesz zedytowac: ";
+	cin >> editAttribute;
+	system("cls");
+	cout << "Podaj nowa wartosc: ";
+	switch (editAttribute)
+	{
+	case 1:
+		cin >> motorcycles.at(editId - 1).brand;
+		break;
+	case 2:
+		cin >> motorcycles.at(editId - 1).model;
+		break;
+	case 3:
+		cin >> motorcycles.at(editId - 1).power;
+		break;
+	default:
+		break;
+	}
+
+	ofstream fileOut;
+	fileOut.open("motorcycles", ios::binary | ios::out);
+	for (int i = 0; i < motorcycles.size(); i++)
+	{
+		fileOut.write((char*)&motorcycles.at(i), sizeof(Motorcycle));
+	}
+	fileOut.close();
+
+	system("cls");
+	cout << "Motocykl zostal zedytowany.\n\n";
+	system("pause");
 };
 
 void displayCustomers() {
@@ -259,7 +321,6 @@ void displayCustomers() {
 	if (customers.size() == 0) cout << "Brak klientow w bazie.\n\n";
 
 	system("pause");
-	return menu();
 };
 
 void displayMotorcycles() {
@@ -283,6 +344,6 @@ void displayMotorcycles() {
 		cout << "Moc: " << motorcycles.at(i).power << "\n\n";
 	}
 	if (motorcycles.size() == 0) cout << "Brak motocykli w bazie.\n\n";
+
 	system("pause");
-	return menu();
 };
