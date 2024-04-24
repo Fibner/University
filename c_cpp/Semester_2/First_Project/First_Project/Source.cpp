@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ void displayCustomers();
 void displayMotorcycles();
 
 int main() {
-	while(true) menu();
+	while (true) menu();
 	return 0;
 }
 
@@ -77,7 +78,7 @@ void menu() {
 }
 
 void addCustomer() {
-	Customer tempCustomer;
+	Customer tempCustomer{"", "", ""};
 	vector<Customer> customers;
 
 	ifstream fileIn;
@@ -94,7 +95,8 @@ void addCustomer() {
 	cout << "Podaj nazwisko: ";
 	cin >> tempCustomer.surname;
 	cout << "Podaj adres: ";
-	cin >> tempCustomer.addres;
+	cin.ignore();
+	cin.getline(tempCustomer.addres, 50);
 	customers.push_back(tempCustomer);
 
 	ofstream fileOut;
@@ -113,9 +115,10 @@ void addMotorcycle() {
 	system("cls");
 	Motorcycle tempMotorcycle;
 	cout << "Podaj marke: ";
-	cin >> tempMotorcycle.brand;
+	cin.ignore();
+	cin.getline(tempMotorcycle.brand, 50);
 	cout << "Podaj model: ";
-	cin >> tempMotorcycle.model;
+	cin.getline(tempMotorcycle.model, 50);
 	cout << "Podaj moc: ";
 	cin >> tempMotorcycle.power;
 
@@ -273,10 +276,12 @@ void editMotorcycle(){
 	switch (editAttribute)
 	{
 	case 1:
-		cin >> motorcycles.at(editId - 1).brand;
+		cin.ignore();
+		cin.getline(motorcycles.at(editId - 1).brand, 50);
 		break;
 	case 2:
-		cin >> motorcycles.at(editId - 1).model;
+		cin.ignore();
+		cin.getline(motorcycles.at(editId - 1).model, 50);
 		break;
 	case 3:
 		cin >> motorcycles.at(editId - 1).power;
@@ -299,6 +304,7 @@ void editMotorcycle(){
 };
 
 void displayCustomers() {
+
 	vector<Customer> customers;
 	ifstream fileIn;
 
@@ -318,9 +324,44 @@ void displayCustomers() {
 		cout << "Nazwisko: " << customers.at(i).surname << "\n";
 		cout << "Adres: " << customers.at(i).addres << "\n\n";
 	}
-	if (customers.size() == 0) cout << "Brak klientow w bazie.\n\n";
+	if (customers.size() == 0) {
+		cout << "Brak klientow w bazie.\n\n";
+		system("pause");
+	}
 
-	system("pause");
+	int selectedAction;
+	cout << "-----\nOpcje:\n";
+	cout << "0 - Powrot\n";
+	cout << "1 - Sortuj po imieniu\n";
+	cout << "2 - Sortuj po nazwisku\n";
+	cout << "3 - Sortuj po adresie\n";
+	cin >> selectedAction;
+	switch (selectedAction)
+	{
+	case 0:
+		return;
+		break;
+	case 1:
+		sort(customers.begin(), customers.end(), [](Customer c1, Customer c2) {return (string(c1.name) < string(c2.name)); });
+		break;
+	case 2:
+		sort(customers.begin(), customers.end(), [](Customer c1, Customer c2) {return (string(c1.surname) < string(c2.surname)); });
+		break;
+	case 3:
+		sort(customers.begin(), customers.end(), [](Customer c1, Customer c2) {return (string(c1.addres) < string(c2.addres)); });
+		break;
+	default:
+		break;
+	}
+	ofstream fileOut;
+	fileOut.open("customers", ios::binary | ios::out);
+	for (int i = 0; i < customers.size(); i++)
+	{
+		fileOut.write((char*)&customers.at(i), sizeof(Customer));
+	}
+	fileOut.close();
+
+	return displayCustomers();
 };
 
 void displayMotorcycles() {
@@ -343,7 +384,42 @@ void displayMotorcycles() {
 		cout << "Model: " << motorcycles.at(i).model << "\n";
 		cout << "Moc: " << motorcycles.at(i).power << "\n\n";
 	}
-	if (motorcycles.size() == 0) cout << "Brak motocykli w bazie.\n\n";
+	if (motorcycles.size() == 0) {
+		cout << "Brak motocykli w bazie.\n\n";
+		system("pause");
+	}
 
-	system("pause");
+	int selectedAction;
+	cout << "Opcje:\n";
+	cout << "0 - Powrot\n";
+	cout << "1 - Sortuj po marce\n";
+	cout << "2 - Sortuj po modelu\n";
+	cout << "3 - Sortuj po mocy\n";
+	cin >> selectedAction;
+	switch (selectedAction)
+	{
+	case 0:
+		return;
+		break;
+	case 1:
+		sort(motorcycles.begin(), motorcycles.end(), [](Motorcycle m1, Motorcycle m2) {return (string(m1.brand) < string(m2.brand)); });
+		break;
+	case 2:
+		sort(motorcycles.begin(), motorcycles.end(), [](Motorcycle m1, Motorcycle m2) {return (string(m1.model) < string(m2.model)); });
+		break;
+	case 3:
+		sort(motorcycles.begin(), motorcycles.end(), [](Motorcycle m1, Motorcycle m2) {return (m1.power < m2.power); });
+		break;
+	default:
+		break;
+	}
+	ofstream fileOut;
+	fileOut.open("motorcycles", ios::binary | ios::out);
+	for (int i = 0; i < motorcycles.size(); i++)
+	{
+		fileOut.write((char*)&motorcycles.at(i), sizeof(Motorcycle));
+	}
+	fileOut.close();
+
+	return displayMotorcycles();
 };
