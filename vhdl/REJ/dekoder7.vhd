@@ -2,24 +2,31 @@ library ieee;
    use ieee.std_logic_1164.all;
    use ieee.std_logic_unsigned.all;
  
-   entity dekoder7 is
+   entity display is
    port (
-         i : in bit_vector(4 downto 0);
+         i : in std_logic_vector (4 downto 0);
          o : out std_logic_vector(6 downto 0)
    );
-   end dekoder7;
+   end display;
  
-   architecture behaviour of dekoder7 is
+   architecture behaviour of display is
    begin
    with i select
-          o <= "1110111" when "00000",
-               "1110111" when "00001",
-               "1110111" when "00010",
-               "1110111" when "00011",
-               "1110111" when "00100",
-               "1110111" when "00101",
-               "1110111" when "00110",
-               "1110111" when "00111",
-               "1110111" when "01000",
+          o <= "1000000" when "00000",
+               "1111001" when "00001",
+               "0100100" when "00010",
+               "0110000" when "00011",
+               "0011001" when "00100",
+               "0010010" when "00101",
+               "0000010" when "00110",
+               "1111000" when "00111",
+               "0000000" when "01000",
+		   "0010000" when "01001",
+		   "0001000" when "01010",
+		   "0000011" when "01011",
+		   "1000110" when "01100",
+		   "0100001" when "01101",
+		   "0000110" when "01110",
+		   "0001110" when "01111",
                "XXXXXXX" when others;
    end behaviour;
